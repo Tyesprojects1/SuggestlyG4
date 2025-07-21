@@ -14,6 +14,12 @@ public final class VaultApplication {
     public static void main(String[] args) {
         System.out.println("VaultApplication started. Type 'help' for commands.");
         Vault vault = new Vault();
+        try {
+            new VaultServer(vault).start();
+            System.out.println("HTTP server started on port 8080.");
+        } catch (java.io.IOException e) {
+            System.err.println("Failed to start HTTP server: " + e.getMessage());
+        }
         try (java.util.Scanner scanner = new java.util.Scanner(System.in)) {
             while (true) {
                 System.out.print("> ");

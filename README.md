@@ -2,6 +2,9 @@
 
 A minimal Java-based vault example that runs from the command line or in Docker.
 
+The included Docker Compose setup provides an Nginx reverse proxy with a self-signed
+certificate for `suggestify.local`. This demonstrates basic DNS and SSL usage.
+
 ## Building
 
 Compile and run directly with Java:
@@ -10,6 +13,8 @@ Compile and run directly with Java:
 javac Vault.java VaultApplication.java
 java VaultApplication
 ```
+
+The application now also exposes an HTTP API on port `8080` with `/store` and `/get` endpoints.
 
 When started, the application provides a simple interactive prompt:
 
@@ -35,5 +40,9 @@ docker run --rm -it vault-app
 Launch the database and application together:
 
 ```bash
+./generate_cert.sh
+sudo sh -c 'echo "127.0.0.1 suggestify.local" >> /etc/hosts'
 docker-compose up
 ```
+
+Once running, visit `https://suggestify.local` in your browser. The certificate is self-signed so you may need to accept the warning.
