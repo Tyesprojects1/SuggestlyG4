@@ -4,5 +4,15 @@ services:
     image: postgres:15
   app:
     build: .
+    expose:
+      - "8080"
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
     ports:
-      - 8080:8080
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app

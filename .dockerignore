@@ -1,0 +1,4 @@
+# Ignore git and local build artifacts
+.git
+*.class
+certs
