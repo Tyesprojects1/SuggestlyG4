@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e
-javac VaultApplication.java
+javac -Xlint:all Vault.java VaultApplication.java
 java VaultApplication

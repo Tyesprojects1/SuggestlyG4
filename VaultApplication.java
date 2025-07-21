@@ -1,9 +1,7 @@
 /**
- * VaultApplication: demonstrates a simple in-memory vault.
+ * VaultApplication provides a minimal CLI for storing and retrieving secrets.
  */
 public final class VaultApplication {
-    private static final java.util.Map<String, String> VAULT = new java.util.concurrent.ConcurrentHashMap<>();
-
     private VaultApplication() {
         // utility class
     }
@@ -14,29 +12,41 @@ public final class VaultApplication {
      * @param args command-line arguments (ignored)
      */
     public static void main(String[] args) {
-        System.out.println("VaultApplication started.");
-        storeSecret("admin", "s3cr3t");
-        String secret = getSecret("admin");
-        System.out.println("Secret for admin: " + secret);
-    }
-
-    /**
-     * Stores a secret value for a given key.
-     *
-     * @param key   identifier for the secret
-     * @param value the secret value
-     */
-    static void storeSecret(String key, String value) {
-        VAULT.put(key, value);
-    }
-
-    /**
-     * Retrieves the secret for the provided key.
-     *
-     * @param key identifier for the secret
-     * @return the stored value or an empty string if not found
-     */
-    static String getSecret(String key) {
-        return VAULT.getOrDefault(key, "");
+        System.out.println("VaultApplication started. Type 'help' for commands.");
+        Vault vault = new Vault();
+        try (java.util.Scanner scanner = new java.util.Scanner(System.in)) {
+            while (true) {
+                System.out.print("> ");
+                String line = scanner.nextLine().trim();
+                if (line.equalsIgnoreCase("exit")) {
+                    break;
+                } else if (line.startsWith("store ")) {
+                    String[] parts = line.split(" ", 3);
+                    if (parts.length == 3) {
+                        vault.storeSecret(parts[1], parts[2]);
+                        System.out.println("Stored.");
+                    } else {
+                        System.out.println("Usage: store <key> <value>");
+                    }
+                } else if (line.startsWith("get ")) {
+                    String[] parts = line.split(" ", 2);
+                    if (parts.length == 2) {
+                        String value = vault.getSecret(parts[1]);
+                        if (value.isEmpty()) {
+                            System.out.println("No secret found.");
+                        } else {
+                            System.out.println(value);
+                        }
+                    } else {
+                        System.out.println("Usage: get <key>");
+                    }
+                } else if (line.equalsIgnoreCase("help")) {
+                    System.out.println("Commands: store <key> <value>, get <key>, exit");
+                } else {
+                    System.out.println("Unknown command. Type 'help' for commands.");
+                }
+            }
+        }
+        System.out.println("VaultApplication stopped.");
     }
 }
