@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
  */
 public final class VaultServer {
     private final Vault vault;
+    private HttpServer server;
 
     /**
      * Creates a new server backed by the provided vault.
@@ -25,14 +26,25 @@ public final class VaultServer {
         this.vault = vault;
     }
 
-    /** Starts the server on port 8080. */
+    /**
+     * Starts the server on port 8080.
+     *
+     * @throws IOException if the server cannot be started
+     */
     public void start() throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        server = HttpServer.create(new InetSocketAddress(8080), 0);
         server.createContext("/", new RootHandler());
         server.createContext("/store", new StoreHandler());
         server.createContext("/get", new GetHandler());
         server.setExecutor(Executors.newFixedThreadPool(4));
         server.start();
+    }
+
+    /** Stops the HTTP server if it is running. */
+    public void stop() {
+        if (server != null) {
+            server.stop(0);
+        }
     }
 
     private static class RootHandler implements HttpHandler {

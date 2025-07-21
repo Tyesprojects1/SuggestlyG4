@@ -14,8 +14,10 @@ public final class VaultApplication {
     public static void main(String[] args) {
         System.out.println("VaultApplication started. Type 'help' for commands.");
         Vault vault = new Vault();
+        VaultServer server = null;
         try {
-            new VaultServer(vault).start();
+            server = new VaultServer(vault);
+            server.start();
             System.out.println("HTTP server started on port 8080.");
         } catch (java.io.IOException e) {
             System.err.println("Failed to start HTTP server: " + e.getMessage());
@@ -52,6 +54,9 @@ public final class VaultApplication {
                     System.out.println("Unknown command. Type 'help' for commands.");
                 }
             }
+        }
+        if (server != null) {
+            server.stop();
         }
         System.out.println("VaultApplication stopped.");
     }

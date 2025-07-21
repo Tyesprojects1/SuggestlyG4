@@ -10,9 +10,11 @@ certificate for `suggestify.local`. This demonstrates basic DNS and SSL usage.
 Compile and run directly with Java:
 
 ```bash
-javac Vault.java VaultApplication.java
+javac Vault.java VaultServer.java VaultApplication.java
 java VaultApplication
 ```
+
+You can also run `./run.sh` to build and start the application in one step.
 
 The application now also exposes an HTTP API on port `8080` with `/store` and `/get` endpoints.
 
@@ -25,6 +27,8 @@ Stored.
 s3cr3t
 > exit
 ```
+
+The HTTP server stops automatically when you exit.
 
 ## Docker
 
